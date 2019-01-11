@@ -1,4 +1,4 @@
-baseURL: "https://kjhealy.github.io/"
+baseURL: "https://datamgmt.org"
 languageCode: en-us
 title: Data Management
 theme: "kjh-tufte-hugo"
