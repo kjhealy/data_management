@@ -1,6 +1,6 @@
 ---
 title: "Class 1"
-date: "2018-09-04"
+date: "2019-01-10"
 citeproc: false
 bibliography: ../../static/bib/references.bib
 csl: ../../static/bib/chicago-syllabus-no-bib.csl
@@ -12,4 +12,19 @@ editor_options:
   chunk_output_type: console
 ---
 
-# 
+# Slides
+
+[Slides from class (PDF)](/slides/01_intro.pdf)
+
+# Links
+
+- [The R Project for Statistical Computing](https://www.r-project.org/)
+- [R Studio](https://www.rstudio.com)
+- [Happy Git with R](https://happygitwithr.com)
+
+
+# Reading
+
+Skim, if you like:
+
+- [@healy18:_plain_person_guide_plain_text_social_scien]
