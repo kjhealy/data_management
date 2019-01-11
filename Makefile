@@ -1,5 +1,5 @@
 SSH_USER = kjhealy@kjhealy.co
-DOCUMENT_ROOT = ~/public/visualizingsociety.com/public_html
+DOCUMENT_ROOT = ~/public/datamgmt.org/public_html
 PUBLIC_DIR = public/
 PREFIX = /Users/kjhealy/.pandoc
 BIB = /Users/kjhealy/Documents/bibs/socbib-pandoc.bib
