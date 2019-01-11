@@ -1,0 +1,55 @@
+---
+title: Syllabus
+slug: syllabus
+citeproc: false
+bibliography: ../static/bib/references.bib
+csl: ../static/bib/chicago-syllabus-no-bib.csl
+---
+
+```{r load-libraries, message=FALSE, warning=FALSE, include=FALSE}
+library(dplyr)
+library(tibble)
+library(pander)
+```
+
+[^courseinfo]: {-}
+  `r blogdown::shortcode("courseinfo")`
+
+
+# Course objectives
+
+The goal of this mini-seminar is to introduce some of the core tools, skills, and strategies that are useful to graduate students (and others) in the social sciences while working with quantitative data. It exists because of frustrations students have had in the past when (a) getting up and running with some of the applications used across seminars in the department, and (b) learning about helpful tools that they discover, too late, could have saved them a lot of time, effort, and error had they known about them earlier on.
+
+This introduction is opinionated but not dogmatic. I will emphasize a collection of mostly free, generally cross-platform tools oriented to writing about and working with data programatically, reproducibly, and in plain text formats. This is only one approach. Others can be equally effective when it comes to managing your own work. The tools we will describe are very widely used in academia and in the wider word of data analysis and "data science". They are pretty robust and generally have good, helpful user communities associated with them. 
+
+
+# Orientation
+
+I'll be starting from the overview in [@healy18:_plain_person_guide_plain_text_social_scien]. However, I am not going to encourage you to learn Emacs. 
+
+# Software
+
+The main tools we will be working with are R, [R Studio](rstudio.com), [git](https://git-scm.com/), and [GitHub](https://git-scm.com/). There are other things, too, such as the shell (or console, or command line, or Terminal), some handy Unix utilities, text editors, and assorted miscellaneous applications. But to begin with, make sure you have R, R Studio, and git installed, along with access to GitHub.
+
+Here is what to do to get R an R Studio:
+
+1. Get the most recent version of R. R is free and available for Windows, Mac, and Linux operating systems. Download^[`cloud.r-project.org`] the version of R compatible with your operating system. If you are running Windows or MacOS, you should choose one of the *precompiled binary* distributions (i.e., ready-to-run applications) linked at the top of the R Project's webpage. 
+2. Once^[`rstudio.com`] R is installed, download and install R Studio. R Studio is an "Integrated Development Environment", or IDE. This means it is a front-end for R that makes it much easier to work with. R Studio is also free, and available for Windows, Mac, and Linux platforms.
+3. Install^[`tidyverse.org`] the tidyverse library and several other add-on packages for R. These libraries provide useful functionality that we will take advantage of throughout the book. You can learn more about the tidyverse's family of packages at its website.
+
+   To install the tidyverse, make sure you have an Internet connection and then launch R Studio. Type the following lines of code at R's command prompt, located in the window named "Console", and hit return. In the code below, the `<-` arrow is made up of two keystrokes, first `<` and then the short dash or minus symbol, `-`.
+
+```{r, echo=TRUE, eval=FALSE, tidy = FALSE}
+my_packages <- c("tidyverse", "broom", "devtools")
+
+install.packages(my_packages, repos = "http://cran.rstudio.com")
+```
+
+R Studio should then download and install these packages for you. It may take a little while to download everything.
+
+To get git and GitHub up and running, consult Jenny Bryan et al's extremely useful [Happy Git with R](https://happygitwithr.com) and follow the instructions there. 
+
+
+# Notes and Queries
+
+If I use slides in class I'll post them for that week on the [schedule](schedule/) along with any code we make use of or other material we refer to.

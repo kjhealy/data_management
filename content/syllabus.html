@@ -1,0 +1,103 @@
+---
+title: Syllabus
+slug: syllabus
+citeproc: false
+bibliography: ../static/bib/references.bib
+csl: ../static/bib/chicago-syllabus-no-bib.csl
+---
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    background-color: #ffffff;
+    color: #a0a0a0;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #a0a0a0;  padding-left: 4px; }
+div.sourceCode
+  { color: #1f1c1b; background-color: #ffffff; }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span. { color: #1f1c1b; } /* Normal */
+code span.al { color: #bf0303; background-color: #f7e6e6; font-weight: bold; } /* Alert */
+code span.an { color: #ca60ca; } /* Annotation */
+code span.at { color: #0057ae; } /* Attribute */
+code span.bn { color: #b08000; } /* BaseN */
+code span.bu { color: #644a9b; font-weight: bold; } /* BuiltIn */
+code span.cf { color: #1f1c1b; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #924c9d; } /* Char */
+code span.cn { color: #aa5500; } /* Constant */
+code span.co { color: #898887; } /* Comment */
+code span.cv { color: #0095ff; } /* CommentVar */
+code span.do { color: #607880; } /* Documentation */
+code span.dt { color: #0057ae; } /* DataType */
+code span.dv { color: #b08000; } /* DecVal */
+code span.er { color: #bf0303; text-decoration: underline; } /* Error */
+code span.ex { color: #0095ff; font-weight: bold; } /* Extension */
+code span.fl { color: #b08000; } /* Float */
+code span.fu { color: #644a9b; } /* Function */
+code span.im { color: #ff5500; } /* Import */
+code span.in { color: #b08000; } /* Information */
+code span.kw { color: #1f1c1b; font-weight: bold; } /* Keyword */
+code span.op { color: #1f1c1b; } /* Operator */
+code span.ot { color: #006e28; } /* Other */
+code span.pp { color: #006e28; } /* Preprocessor */
+code span.re { color: #0057ae; background-color: #e0e9f8; } /* RegionMarker */
+code span.sc { color: #3daee9; } /* SpecialChar */
+code span.ss { color: #ff5500; } /* SpecialString */
+code span.st { color: #bf0303; } /* String */
+code span.va { color: #0057ae; } /* Variable */
+code span.vs { color: #bf0303; } /* VerbatimString */
+code span.wa { color: #bf0303; } /* Warning */
+</style>
+
+
+<h2 id="course-objectives">Course objectives</h2>
+<p>The goal of this mini-seminar is to introduce some of the core tools, skills, and strategies that are useful to graduate students (and others) in the social sciences while working with quantitative data. It exists because of frustrations students have had in the past when (a) getting up and running with some of the applications used across seminars in the department, and (b) learning about helpful tools that they discover, too late, could have saved them a lot of time, effort, and error had they known about them earlier on.</p>
+<p>This introduction is opinionated but not dogmatic. I will emphasize a collection of mostly free, generally cross-platform tools oriented to writing about and working with data programatically, reproducibly, and in plain text formats. This is only one approach. Others can be equally effective when it comes to managing your own work. The tools we will describe are very widely used in academia and in the wider word of data analysis and “data science”. They are pretty robust and generally have good, helpful user communities associated with them.</p>
+<h2 id="orientation">Orientation</h2>
+<p>I’ll be starting from the overview in <span class="citation">Kieran Healy, <em>The Plain Person’s Guide to Plain-Text Social Science</em> (Online, 2018), <a href="https://plain-text.co">https://plain-text.co</a>.</span> However, I am not going to encourage you to learn Emacs.</p>
+<h2 id="software">Software</h2>
+<p>The main tools we will be working with are R, <a href="rstudio.com">R Studio</a>, <a href="https://git-scm.com/">git</a>, and <a href="https://git-scm.com/">GitHub</a>. There are other things, too, such as the shell (or console, or command line, or Terminal), some handy Unix utilities, text editors, and assorted miscellaneous applications. But to begin with, make sure you have R, R Studio, and git installed, along with access to GitHub.</p>
+<p>Here is what to do to get R an R Studio:</p>
+<ol style="list-style-type: decimal">
+<li>Get the most recent version of R. R is free and available for Windows, Mac, and Linux operating systems. Download<span><label for="sn-1" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-1" class="margin-toggle"/><span class="sidenote"><code>cloud.r-project.org</code><br />
+<br />
+</span></span> the version of R compatible with your operating system. If you are running Windows or MacOS, you should choose one of the <em>precompiled binary</em> distributions (i.e., ready-to-run applications) linked at the top of the R Project’s webpage.</li>
+<li>Once<span><label for="sn-2" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-2" class="margin-toggle"/><span class="sidenote"><code>rstudio.com</code><br />
+<br />
+</span></span> R is installed, download and install R Studio. R Studio is an “Integrated Development Environment”, or IDE. This means it is a front-end for R that makes it much easier to work with. R Studio is also free, and available for Windows, Mac, and Linux platforms.</li>
+<li><p>Install<span><label for="sn-3" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-3" class="margin-toggle"/><span class="sidenote"><code>tidyverse.org</code><br />
+<br />
+</span></span> the tidyverse library and several other add-on packages for R. These libraries provide useful functionality that we will take advantage of throughout the book. You can learn more about the tidyverse’s family of packages at its website.</p>
+<p>To install the tidyverse, make sure you have an Internet connection and then launch R Studio. Type the following lines of code at R’s command prompt, located in the window named “Console”, and hit return. In the code below, the <code>&lt;-</code> arrow is made up of two keystrokes, first <code>&lt;</code> and then the short dash or minus symbol, <code>-</code>.</p></li>
+</ol>
+<pre class="sourceCode r"><code class="sourceCode r">my_packages &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;tidyverse&quot;</span>, <span class="st">&quot;broom&quot;</span>, <span class="st">&quot;devtools&quot;</span>)
+
+<span class="kw">install.packages</span>(my_packages, <span class="dt">repos =</span> <span class="st">&quot;http://cran.rstudio.com&quot;</span>)</code></pre>
+<p>R Studio should then download and install these packages for you. It may take a little while to download everything.</p>
+<p>To get git and GitHub up and running, consult Jenny Bryan et al’s extremely useful <a href="https://happygitwithr.com">Happy Git with R</a> and follow the instructions there.</p>
+<h2 id="notes-and-queries">Notes and Queries</h2>
+<p>If I use slides in class I’ll post them for that week on the <a href="schedule/">schedule</a> along with any code we make use of or other material we refer to.</p>

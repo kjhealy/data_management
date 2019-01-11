@@ -1,0 +1,72 @@
+baseURL: "https://kjhealy.github.io/"
+languageCode: en-us
+title: Data Management
+theme: "kjh-tufte-hugo"
+googleAnalytics: ""
+ignoreFiles:
+  - \.Rmd$
+  - \.Rmarkdown$
+  - \.yaml$
+  - _files$
+  - _cache$
+  - \.csl$
+permalinks:
+  post: "/:year/:month/:day/:slug/"
+buildFuture: true
+menu:
+  main:
+    - name: Syllabus
+      url: /syllabus/
+      weight: 1
+    - name: Assignments
+      url: /assignments/
+      weight: 3
+    - name: Schedule
+      url: /schedule/
+      weight: 2
+    - name: Reference
+      url: /reference/
+      weight: 4
+# Disable taxonomies
+taxonomies:
+  tag: ""
+  group: ""
+  category: ""
+params:
+  author: Kieran Healy
+  thumbnail: /images/dmgt_meta.png
+  instructor: 
+    name: Kieran Healy
+    email: kjhealy@soc.duke.edu
+    url: "https://www.kieranhealy.org"
+    twitter: kjhealy
+    github: kjhealy
+    office: "Soc/Psych 255"
+  course:
+    number: SOCIOL 880
+    semester: Spring 2019
+    days: "Thursdays"
+    time: "10:00AM-12:30PM"
+    location: "Soc/Psych 248"
+    twitter: kjhealy
+    dates: "January 11th–April 17th, 2019"
+    github: "kjhealy/datamanagement"
+    copyrightYear: "2019"
+    contactDetails: >-
+      Office hours: By appointment.
+  university: 
+    name: Duke University
+    url: "https://www.duke.edu"
+  school:
+    name: Sociology Department
+    url: "https://sociology.duke.edu"
+  description: "Plain text social science"
+  primaryColor: "#325C8E"
+  secondaryColor: "#74080A"
+  credits: >-
+  logo:
+    url: /images/dmgt_hires.png
+    alt: Data Management
+  meta:
+    twitterSite: "@kjhealy"
+    twitterCreator: "@kjhealy"
