@@ -1,0 +1,34 @@
+lessons:
+  
+  - title: "What are we doing here?"
+    date: "January 10th"
+    class: "01-class"
+
+
+  - title: "Models of work"
+    date: "January 15th/17th"
+    class: "02-models"
+    
+  - title: "Getting data in to R"
+    date: "January 22nd/24th"
+    class: "03-data-in"
+
+  - title: "Coding and recoding"    
+    date: "January 29th/31st"
+    class: "04-recoding"
+
+  - title: "Missing data"
+    date: "February 5th/7th"
+    class: "05-missing-data"
+
+  - title: ""    
+    date: "February 12th/14th"
+
+  - title: ""    
+    date: "February 19th/21st"
+
+  - title: ""
+    date: "February 26th/28th"
+
+  - title: ""
+    date: "March 5th/7th"

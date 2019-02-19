@@ -1,0 +1,24 @@
+---
+title: "Models of Work"
+date: "2019-02-10"
+citeproc: false
+bibliography: ../../static/bib/references.bib
+csl: ../../static/bib/chicago-syllabus-no-bib.csl
+output:
+  blogdown::html_page:
+    template: ../../pandoc/toc-title_html.template
+    toc: true
+editor_options: 
+  chunk_output_type: console
+---
+
+# Slides
+
+[Slides from class (PDF)](/slides/02_models.pdf)
+
+# Links
+
+- [Happy Git with R](https://happygitwithr.com)
+
+
+# Reading

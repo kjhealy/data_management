@@ -1,0 +1,21 @@
+---
+title: "Recoding Data"
+date: "2019-02-17"
+citeproc: false
+bibliography: ../../static/bib/references.bib
+csl: ../../static/bib/chicago-syllabus-no-bib.csl
+output:
+  blogdown::html_page:
+    template: ../../pandoc/toc-title_html.template
+    toc: true
+editor_options: 
+  chunk_output_type: console
+---
+
+# Slides
+
+[Slides from class (PDF)](/slides/04_tidy_recodes.pdf)
+
+# Links
+
+# Reading
