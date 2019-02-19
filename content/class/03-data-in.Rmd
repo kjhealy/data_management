@@ -1,6 +1,6 @@
 ---
 title: "Getting Data in to R"
-date: "2019-02-10"
+date: "2019-01-24"
 citeproc: false
 bibliography: ../../static/bib/references.bib
 csl: ../../static/bib/chicago-syllabus-no-bib.csl

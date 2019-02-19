@@ -1,0 +1,651 @@
+---
+title: "Working with the CQ Data"
+date: "2019-01-31"
+editor_options: 
+  chunk_output_type: console
+---
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    background-color: #ffffff;
+    color: #a0a0a0;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #a0a0a0;  padding-left: 4px; }
+div.sourceCode
+  { color: #1f1c1b; background-color: #ffffff; }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span. { color: #1f1c1b; } /* Normal */
+code span.al { color: #bf0303; background-color: #f7e6e6; font-weight: bold; } /* Alert */
+code span.an { color: #ca60ca; } /* Annotation */
+code span.at { color: #0057ae; } /* Attribute */
+code span.bn { color: #b08000; } /* BaseN */
+code span.bu { color: #644a9b; font-weight: bold; } /* BuiltIn */
+code span.cf { color: #1f1c1b; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #924c9d; } /* Char */
+code span.cn { color: #aa5500; } /* Constant */
+code span.co { color: #898887; } /* Comment */
+code span.cv { color: #0095ff; } /* CommentVar */
+code span.do { color: #607880; } /* Documentation */
+code span.dt { color: #0057ae; } /* DataType */
+code span.dv { color: #b08000; } /* DecVal */
+code span.er { color: #bf0303; text-decoration: underline; } /* Error */
+code span.ex { color: #0095ff; font-weight: bold; } /* Extension */
+code span.fl { color: #b08000; } /* Float */
+code span.fu { color: #644a9b; } /* Function */
+code span.im { color: #ff5500; } /* Import */
+code span.in { color: #b08000; } /* Information */
+code span.kw { color: #1f1c1b; font-weight: bold; } /* Keyword */
+code span.op { color: #1f1c1b; } /* Operator */
+code span.ot { color: #006e28; } /* Other */
+code span.pp { color: #006e28; } /* Preprocessor */
+code span.re { color: #0057ae; background-color: #e0e9f8; } /* RegionMarker */
+code span.sc { color: #3daee9; } /* SpecialChar */
+code span.ss { color: #ff5500; } /* SpecialString */
+code span.st { color: #bf0303; } /* String */
+code span.va { color: #0057ae; } /* Variable */
+code span.vs { color: #bf0303; } /* VerbatimString */
+code span.wa { color: #bf0303; } /* Warning */
+</style>
+
+
+<h2 id="working-with-the-cq-data">Working with the CQ Data</h2>
+<pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span>opts_chunk<span class="op">$</span><span class="kw">set</span>(<span class="dt">echo =</span> <span class="ot">TRUE</span>)
+
+<span class="kw">library</span>(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ✔ ggplot2 3.1.0           ✔ purrr   0.2.5      
+## ✔ tibble  2.0.99.9000     ✔ dplyr   0.8.0.9000 
+## ✔ tidyr   0.8.2           ✔ stringr 1.3.1      
+## ✔ readr   1.3.1           ✔ forcats 0.3.0</code></pre>
+<pre><code>## ── Conflicts ───────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter()  masks stats::filter()
+## ✖ purrr::is_null() masks testthat::is_null()
+## ✖ dplyr::lag()     masks stats::lag()
+## ✖ dplyr::matches() masks testthat::matches()</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(janitor)
+<span class="kw">library</span>(lubridate)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;lubridate&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:base&#39;:
+## 
+##     date</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(socviz)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;socviz&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:kjhutils&#39;:
+## 
+##     %nin%</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">## Calculate age in years, months, or days</span>
+calc_age &lt;-<span class="st"> </span><span class="cf">function</span>(birth_date, <span class="dt">ref_date =</span> <span class="kw">Sys.Date</span>(), <span class="dt">unit =</span> <span class="st">&quot;year&quot;</span>) {
+
+    <span class="kw">require</span>(lubridate)
+
+    period &lt;-<span class="st"> </span><span class="kw">as.period</span>(<span class="kw">interval</span>(birth_date, ref_date),
+                        <span class="dt">unit =</span> unit)
+
+    <span class="cf">switch</span>(unit,
+           <span class="dt">year =</span> <span class="kw">year</span>(period),
+           <span class="dt">month =</span> <span class="kw">month</span>(period),
+           <span class="dt">day =</span> <span class="kw">day</span>(period),
+           <span class="dt">stop =</span> <span class="st">&quot;Unknown time unit. Choose year, month, or day.&quot;</span>)
+
+}</code></pre>
+<h3 id="load-it">Load it</h3>
+<pre class="sourceCode r"><code class="sourceCode r">filenames &lt;-<span class="st"> </span><span class="kw">dir</span>(<span class="dt">path =</span> <span class="st">&quot;data/clean&quot;</span>,
+                 <span class="dt">pattern =</span> <span class="st">&quot;*.csv&quot;</span>,
+                 <span class="dt">full.names =</span> <span class="ot">TRUE</span>)
+
+filenames</code></pre>
+<pre><code>##  [1] &quot;data/clean/01_79_congress.csv&quot;  &quot;data/clean/02_80_congress.csv&quot; 
+##  [3] &quot;data/clean/03_81_congress.csv&quot;  &quot;data/clean/04_82_congress.csv&quot; 
+##  [5] &quot;data/clean/05_83_congress.csv&quot;  &quot;data/clean/06_84_congress.csv&quot; 
+##  [7] &quot;data/clean/07_85_congress.csv&quot;  &quot;data/clean/08_86_congress.csv&quot; 
+##  [9] &quot;data/clean/09_87_congress.csv&quot;  &quot;data/clean/10_88_congress.csv&quot; 
+## [11] &quot;data/clean/11_89_congress.csv&quot;  &quot;data/clean/12_90_congress.csv&quot; 
+## [13] &quot;data/clean/13_91_congress.csv&quot;  &quot;data/clean/14_92_congress.csv&quot; 
+## [15] &quot;data/clean/15_93_congress.csv&quot;  &quot;data/clean/16_94_congress.csv&quot; 
+## [17] &quot;data/clean/17_95_congress.csv&quot;  &quot;data/clean/18_96_congress.csv&quot; 
+## [19] &quot;data/clean/19_97_congress.csv&quot;  &quot;data/clean/20_98_congress.csv&quot; 
+## [21] &quot;data/clean/21_99_congress.csv&quot;  &quot;data/clean/22_100_congress.csv&quot;
+## [23] &quot;data/clean/23_101_congress.csv&quot; &quot;data/clean/24_102_congress.csv&quot;
+## [25] &quot;data/clean/25_103_congress.csv&quot; &quot;data/clean/26_104_congress.csv&quot;
+## [27] &quot;data/clean/27_105_congress.csv&quot; &quot;data/clean/28_106_congress.csv&quot;
+## [29] &quot;data/clean/29_107_congress.csv&quot; &quot;data/clean/30_108_congress.csv&quot;
+## [31] &quot;data/clean/31_109_congress.csv&quot; &quot;data/clean/32_110_congress.csv&quot;
+## [33] &quot;data/clean/33_111_congress.csv&quot; &quot;data/clean/34_112_congress.csv&quot;
+## [35] &quot;data/clean/35_113_congress.csv&quot; &quot;data/clean/36_114_congress.csv&quot;
+## [37] &quot;data/clean/37_115_congress.csv&quot; &quot;data/clean/38_116_congress.csv&quot;</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">data &lt;-<span class="st"> </span>filenames <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">map_dfr</span>(read_csv, <span class="dt">.id =</span> <span class="st">&quot;congress&quot;</span>)</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   JobType5 = col_logical()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   JobType5 = col_logical()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   JobType5 = col_logical()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   JobType5 = col_logical()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   JobType5 = col_logical()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   JobType5 = col_logical()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   JobType5 = col_logical()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   JobType5 = col_logical()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   JobType5 = col_logical()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   JobType5 = col_logical()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   JobType5 = col_logical()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   JobType5 = col_logical()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   JobType5 = col_logical()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   JobType4 = col_logical(),
+##   JobType5 = col_logical()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   JobType4 = col_logical(),
+##   JobType5 = col_logical()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   JobType4 = col_logical(),
+##   JobType5 = col_logical()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   Death = col_logical(),
+##   JobType4 = col_logical(),
+##   JobType5 = col_logical()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">data &lt;-<span class="st"> </span><span class="kw">clean_names</span>(data)</code></pre>
+<h3 id="recodes">Recodes</h3>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">## The start and end and other date variables are CQ&#39;s and coded 01/03/1945 (i.e. m/d/y)</span>
+<span class="co">## We use lubridate&#39;s mdy() to convert them to date objects.</span>
+data &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">start =</span> <span class="kw">mdy</span>(start), 
+         <span class="dt">end =</span> <span class="kw">mdy</span>(end), 
+         <span class="dt">born =</span> <span class="kw">mdy</span>(born), 
+         <span class="dt">death =</span> <span class="kw">mdy</span>(death))
+
+sessions &lt;-<span class="st"> </span><span class="kw">as_tibble</span>(<span class="kw">data.frame</span>(<span class="dt">congress =</span> <span class="dv">79</span><span class="op">:</span><span class="dv">116</span>,
+                       <span class="dt">start_year =</span> <span class="kw">seq</span>(<span class="dv">1945</span>, <span class="dv">2019</span>, <span class="dt">by =</span> <span class="dv">2</span>),
+                       <span class="dt">end_year =</span> <span class="kw">seq</span>(<span class="dv">1947</span>, <span class="dv">2021</span>, <span class="dt">by =</span> <span class="dv">2</span>)))
+
+sessions &lt;-<span class="st"> </span>sessions <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">start_year =</span> <span class="kw">int_to_year</span>(start_year, <span class="st">&quot;01&quot;</span>, <span class="st">&quot;03&quot;</span>),
+         <span class="dt">end_year =</span> <span class="kw">int_to_year</span>(end_year, <span class="st">&quot;01&quot;</span>, <span class="st">&quot;03&quot;</span>))
+
+
+data &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">congress =</span> <span class="kw">as.numeric</span>(congress) <span class="op">+</span><span class="st"> </span><span class="dv">78</span>)
+
+data</code></pre>
+<pre><code>## # A tibble: 20,580 x 26
+##    congress last  first middle suffix nickname born       death      sex  
+##       &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;    &lt;date&gt;     &lt;date&gt;     &lt;chr&gt;
+##  1       79 Aber… Thom… Gerst… &lt;NA&gt;   &lt;NA&gt;     1903-05-16 1953-01-23 M    
+##  2       79 Adams Sher… &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     1899-01-08 1986-10-27 M    
+##  3       79 Aiken Geor… David  &lt;NA&gt;   &lt;NA&gt;     1892-08-20 1984-11-19 M    
+##  4       79 Allen Asa   Leona… &lt;NA&gt;   &lt;NA&gt;     1891-01-05 1969-01-05 M    
+##  5       79 Allen Leo   Elwood &lt;NA&gt;   &lt;NA&gt;     1898-10-05 1973-01-19 M    
+##  6       79 Almo… J.    Linds… Jr.    &lt;NA&gt;     1898-06-15 1986-04-14 M    
+##  7       79 Ande… Herm… Carl   &lt;NA&gt;   &lt;NA&gt;     1897-01-27 1978-07-26 M    
+##  8       79 Ande… Clin… Presba &lt;NA&gt;   &lt;NA&gt;     1895-10-23 1975-11-11 M    
+##  9       79 Ande… John  Zuing… &lt;NA&gt;   &lt;NA&gt;     1904-03-22 1981-02-09 M    
+## 10       79 Andr… Augu… Herman &lt;NA&gt;   &lt;NA&gt;     1890-10-11 1958-01-14 M    
+## # … with 20,570 more rows, and 17 more variables: position &lt;chr&gt;,
+## #   party &lt;chr&gt;, state &lt;chr&gt;, district &lt;chr&gt;, start &lt;date&gt;, end &lt;date&gt;,
+## #   religion &lt;chr&gt;, race &lt;chr&gt;, educational_attainment &lt;chr&gt;,
+## #   job_type1 &lt;chr&gt;, job_type2 &lt;chr&gt;, job_type3 &lt;chr&gt;, job_type4 &lt;chr&gt;,
+## #   job_type5 &lt;chr&gt;, mil1 &lt;chr&gt;, mil2 &lt;chr&gt;, mil3 &lt;chr&gt;</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">data<span class="op">$</span>born[data<span class="op">$</span>last <span class="op">==</span><span class="st"> &quot;Ervin&quot;</span> <span class="op">&amp;</span><span class="st"> </span>data<span class="op">$</span>first <span class="op">==</span><span class="st"> &quot;Joseph&quot;</span>] &lt;-<span class="st"> </span><span class="kw">ymd</span>(<span class="st">&quot;1901-03-01&quot;</span>)</code></pre>
+<p>Join sessions to main data.</p>
+<pre class="sourceCode r"><code class="sourceCode r">data &lt;-<span class="st"> </span><span class="kw">left_join</span>(data, sessions)</code></pre>
+<pre><code>## Joining, by = &quot;congress&quot;</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">## Character Vector of all name-dob combinations </span>
+data &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">name_dob =</span> <span class="kw">paste</span>(last, middle, first, born, <span class="dt">sep =</span> <span class="st">&quot;--&quot;</span>))
+
+<span class="co">## Uniques</span>
+name_dob &lt;-<span class="st"> </span><span class="kw">as.character</span>(<span class="kw">unique</span>(data<span class="op">$</span>name_dob))
+
+<span class="co">## create pid for unique name_dobs</span>
+persons &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">pid =</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(name_dob),
+                  <span class="dt">name_dob =</span> name_dob)
+
+data &lt;-<span class="st"> </span><span class="kw">left_join</span>(data, persons)</code></pre>
+<pre><code>## Joining, by = &quot;name_dob&quot;</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">data &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">start_age =</span> <span class="kw">calc_age</span>(born, start_year))
+
+data <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(start_age)</code></pre>
+<pre><code>## # A tibble: 20,580 x 1
+##    start_age
+##        &lt;int&gt;
+##  1        41
+##  2        45
+##  3        52
+##  4        53
+##  5        46
+##  6        46
+##  7        47
+##  8        49
+##  9        40
+## 10        54
+## # … with 20,570 more rows</code></pre>
+<p>William Joseph Green Jr and William Joseph Green III are father
+and son; the latter succeeded to his father’s seat. The raw data
+have a mistaken entry for the son in the 79th (1945) congress,
+giving his <code>start_age</code> as 6.</p>
+<pre class="sourceCode r"><code class="sourceCode r">ind &lt;-<span class="st"> </span><span class="kw">which</span>(<span class="kw">with</span>(data, congress <span class="op">==</span><span class="st"> </span><span class="dv">79</span> <span class="op">&amp;</span><span class="st"> </span><span class="co">## 1945</span>
+<span class="st">                        </span>last <span class="op">==</span><span class="st"> &quot;Green&quot;</span> <span class="op">&amp;</span>
+<span class="st">                        </span>middle <span class="op">==</span><span class="st"> &quot;Joseph&quot;</span> <span class="op">&amp;</span>
+<span class="st">                        </span>first <span class="op">==</span><span class="st"> &quot;William&quot;</span> <span class="op">&amp;</span>
+<span class="st">                        </span>suffix <span class="op">==</span><span class="st"> &quot;III&quot;</span>)) <span class="co">## but this is the son</span>
+
+data &lt;-<span class="st"> </span>data[<span class="op">-</span>ind,]</code></pre>
+<h3 id="new-variables">New Variables</h3>
+<ul>
+<li><code>poc</code>: Person of color; binary</li>
+<li><code>days_old</code>: N days old</li>
+<li><code>months_old</code>: N months old</li>
+<li><code>full_name</code>: Full Name</li>
+<li><code>end_career</code>: Date of end career</li>
+<li><code>entry_age</code>: Age when first entered congress</li>
+<li><code>yr_fac</code>: start_year as a factor rather than a date</li>
+</ul>
+<pre class="sourceCode r"><code class="sourceCode r">data &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">poc =</span> <span class="kw">recode</span>(race, <span class="st">&quot;White&quot;</span> =<span class="st"> &quot;White&quot;</span>, <span class="dt">.default =</span> <span class="st">&quot;Non-White&quot;</span>),
+         <span class="dt">days_old =</span> <span class="kw">calc_age</span>(born, start_year, <span class="st">&quot;day&quot;</span>),
+         <span class="dt">months_old =</span> <span class="kw">calc_age</span>(born, start_year, <span class="st">&quot;month&quot;</span>),
+         <span class="dt">full_name =</span> <span class="kw">paste</span>(first, last, suffix),
+         <span class="dt">full_name =</span> stringr<span class="op">::</span><span class="kw">str_remove</span>(full_name, <span class="st">&quot; NA$&quot;</span>),
+         <span class="dt">entry_age =</span> <span class="kw">calc_age</span>(born, start),
+         <span class="dt">yr_fac =</span> <span class="kw">factor</span>(<span class="kw">year</span>(start_year)))</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">mean_age &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(position <span class="op">==</span><span class="st"> &quot;U.S. Representative&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">group_by</span>(congress, sex) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">summarize</span>(<span class="dt">N =</span> <span class="kw">n</span>(), 
+              <span class="dt">mean_age =</span> <span class="kw">mean</span>(start_age, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>), 
+              <span class="dt">SD =</span> <span class="kw">sd</span>(start_age),
+              <span class="dt">lo =</span> mean_age <span class="op">-</span><span class="st"> </span>SD, 
+              <span class="dt">hi =</span> mean_age <span class="op">+</span><span class="st"> </span>SD)
+
+data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(position <span class="op">==</span><span class="st"> &quot;U.S. Representative&quot;</span>,
+                    party <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Democrat&quot;</span>, <span class="st">&quot;Republican&quot;</span>)) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">group_by</span>(congress, sex, party) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">summarize</span>(<span class="dt">year =</span> <span class="kw">first</span>(start_year), 
+              <span class="dt">mean_age =</span> <span class="kw">mean</span>(start_age, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">filter</span>(congress <span class="op">==</span><span class="st"> </span><span class="dv">100</span>)</code></pre>
+<pre><code>## # A tibble: 4 x 5
+## # Groups:   congress, sex [2]
+##   congress sex   party      year       mean_age
+##      &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;      &lt;date&gt;        &lt;dbl&gt;
+## 1      100 F     Democrat   1987-01-03     50.5
+## 2      100 F     Republican 1987-01-03     52.5
+## 3      100 M     Democrat   1987-01-03     50.6
+## 4      100 M     Republican 1987-01-03     49.0</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">mean_age &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(position <span class="op">==</span><span class="st"> &quot;U.S. Representative&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">group_by</span>(congress) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">summarize</span>(<span class="dt">year =</span> <span class="kw">first</span>(start_year), 
+              <span class="dt">mean_age =</span> <span class="kw">mean</span>(start_age, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))
+
+mean_age</code></pre>
+<pre><code>## # A tibble: 38 x 3
+##    congress year       mean_age
+##       &lt;dbl&gt; &lt;date&gt;        &lt;dbl&gt;
+##  1       79 1945-01-03     52.1
+##  2       80 1947-01-03     51.3
+##  3       81 1949-01-03     51.1
+##  4       82 1951-01-03     52.1
+##  5       83 1953-01-03     51.8
+##  6       84 1955-01-03     52.1
+##  7       85 1957-01-03     52.8
+##  8       86 1959-01-03     51.7
+##  9       87 1961-01-03     52.4
+## 10       88 1963-01-03     51.8
+## # … with 28 more rows</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(position <span class="op">==</span><span class="st"> &quot;U.S. Representative&quot;</span>,
+                    party <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Democrat&quot;</span>, <span class="st">&quot;Republican&quot;</span>)) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">group_by</span>(congress) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">summarize</span>(<span class="dt">year =</span> <span class="kw">first</span>(start_year), 
+              <span class="dt">mean_age =</span> <span class="kw">mean</span>(start_age, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">filter</span>(congress <span class="op">==</span><span class="st"> </span><span class="dv">116</span>)</code></pre>
+<pre><code>## # A tibble: 1 x 3
+##   congress year       mean_age
+##      &lt;dbl&gt; &lt;date&gt;        &lt;dbl&gt;
+## 1      116 2019-01-03     57.4</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(position <span class="op">==</span><span class="st"> &quot;U.S. Representative&quot;</span>,
+                    party <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Democrat&quot;</span>, <span class="st">&quot;Republican&quot;</span>)) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">group_by</span>(congress, party) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">summarize</span>(<span class="dt">year =</span> <span class="kw">first</span>(start_year), 
+              <span class="dt">mean_age =</span> <span class="kw">mean</span>(start_age, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">filter</span>(congress <span class="op">==</span><span class="st"> </span><span class="dv">116</span>)</code></pre>
+<pre><code>## # A tibble: 2 x 4
+## # Groups:   congress [1]
+##   congress party      year       mean_age
+##      &lt;dbl&gt; &lt;chr&gt;      &lt;date&gt;        &lt;dbl&gt;
+## 1      116 Democrat   2019-01-03     58.1
+## 2      116 Republican 2019-01-03     56.5</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">median_age &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(position <span class="op">==</span><span class="st"> &quot;U.S. Representative&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(congress) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">summarize</span>(<span class="dt">year =</span> <span class="kw">first</span>(start_year), 
+              <span class="dt">median_age =</span> <span class="kw">median</span>(start_age))
+
+median_age_party &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(position <span class="op">==</span><span class="st"> &quot;U.S. Representative&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(congress, party) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">summarize</span>(<span class="dt">year =</span> <span class="kw">first</span>(start_year), 
+              <span class="dt">median_age =</span> <span class="kw">median</span>(start_age)) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">filter</span>(party <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Democrat&quot;</span>, <span class="st">&quot;Republican&quot;</span>))
+
+median_age_party</code></pre>
+<pre><code>## # A tibble: 76 x 4
+## # Groups:   congress [38]
+##    congress party      year       median_age
+##       &lt;dbl&gt; &lt;chr&gt;      &lt;date&gt;          &lt;dbl&gt;
+##  1       79 Democrat   1945-01-03         50
+##  2       79 Republican 1945-01-03         52
+##  3       80 Democrat   1947-01-03         50
+##  4       80 Republican 1947-01-03         51
+##  5       81 Democrat   1949-01-03         48
+##  6       81 Republican 1949-01-03         54
+##  7       82 Democrat   1951-01-03         50
+##  8       82 Republican 1951-01-03         53
+##  9       83 Democrat   1953-01-03         50
+## 10       83 Republican 1953-01-03         53
+## # … with 66 more rows</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">oldest_group_by_year &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(party <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Democrat&quot;</span>, <span class="st">&quot;Republican&quot;</span>),
+         position <span class="op">==</span><span class="st"> &quot;U.S. Representative&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(congress, party) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(start_age <span class="op">&gt;</span><span class="st"> </span><span class="kw">quantile</span>(start_age, <span class="fl">0.99</span>, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))
+
+youngest_group_by_year &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(party <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Democrat&quot;</span>, <span class="st">&quot;Republican&quot;</span>),
+         position <span class="op">==</span><span class="st"> &quot;U.S. Representative&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(congress, party) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">filter</span>(start_age <span class="op">&lt;</span><span class="st"> </span><span class="kw">quantile</span>(start_age, <span class="fl">0.01</span>, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">name_ranks &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">select</span>(start_year, first, sex) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">filter</span>(sex <span class="op">==</span><span class="st"> &quot;M&quot;</span>, <span class="dt">.preserve =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">group_by</span>(start_year, first) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">summarize</span>(<span class="dt">n =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">pct =</span> (n<span class="op">/</span><span class="kw">sum</span>(n))<span class="op">*</span><span class="dv">100</span>) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">group_by</span>(start_year) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">top_n</span>(<span class="dv">3</span>, <span class="dt">wt =</span> pct)
+
+name_ranks</code></pre>
+<pre><code>## # A tibble: 115 x 4
+## # Groups:   start_year [38]
+##    start_year first       n   pct
+##    &lt;date&gt;     &lt;chr&gt;   &lt;int&gt; &lt;dbl&gt;
+##  1 1945-01-03 James      30  5.36
+##  2 1945-01-03 John       49  8.75
+##  3 1945-01-03 William    34  6.07
+##  4 1947-01-03 James      24  4.35
+##  5 1947-01-03 John       51  9.24
+##  6 1947-01-03 William    32  5.80
+##  7 1949-01-03 James      31  5.53
+##  8 1949-01-03 John       54  9.63
+##  9 1949-01-03 William    31  5.53
+## 10 1951-01-03 James      34  5.74
+## # … with 105 more rows</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">job_ranks &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">select</span>(start_year, job_type1) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">group_by</span>(start_year, job_type1) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">summarize</span>(<span class="dt">n =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">mutate</span>(<span class="dt">pct =</span> (n<span class="op">/</span><span class="kw">sum</span>(n))<span class="op">*</span><span class="dv">100</span>) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">group_by</span>(start_year) <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">top_n</span>(<span class="dv">3</span>, <span class="dt">wt =</span> pct) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">    </span><span class="kw">arrange</span>(<span class="kw">desc</span>(pct), <span class="dt">.by_group =</span> <span class="ot">TRUE</span>)  
+
+job_ranks</code></pre>
+<pre><code>## # A tibble: 115 x 4
+## # Groups:   start_year [38]
+##    start_year job_type1               n   pct
+##    &lt;date&gt;     &lt;chr&gt;               &lt;int&gt; &lt;dbl&gt;
+##  1 1945-01-03 Law                   237  41.7
+##  2 1945-01-03 Business or banking   108  19.0
+##  3 1945-01-03 Agriculture            65  11.4
+##  4 1947-01-03 Law                   222  39.8
+##  5 1947-01-03 Business or banking   117  21.0
+##  6 1947-01-03 Agriculture            73  13.1
+##  7 1949-01-03 Law                   227  39.9
+##  8 1949-01-03 Business or banking   110  19.3
+##  9 1949-01-03 Agriculture            77  13.5
+## 10 1951-01-03 Law                   234  38.8
+## # … with 105 more rows</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">senate &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(position <span class="op">==</span><span class="st"> &quot;U.S. Senator&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(pid) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">summarize</span>(<span class="dt">first =</span> <span class="kw">first</span>(first), 
+            <span class="dt">last =</span> <span class="kw">first</span>(last), 
+            <span class="dt">party =</span> <span class="kw">first</span>(party),
+            <span class="dt">state =</span> <span class="kw">first</span>(state), 
+            <span class="dt">start =</span> <span class="kw">first</span>(start), 
+            <span class="dt">end =</span> <span class="kw">first</span>(end))
+
+house &lt;-<span class="st"> </span>data <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">filter</span>(position <span class="op">==</span><span class="st"> &quot;U.S. Representative&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(pid) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">summarize</span>(<span class="dt">state =</span> <span class="kw">first</span>(state),
+            <span class="dt">district =</span> <span class="kw">first</span>(district),
+            <span class="dt">start =</span> <span class="kw">first</span>(start), 
+            <span class="dt">end =</span> <span class="kw">first</span>(end))
+
+
+sen_and_house &lt;-<span class="st"> </span><span class="kw">inner_join</span>(senate, house, <span class="dt">by =</span> <span class="st">&quot;pid&quot;</span>)
+
+sen_and_house</code></pre>
+<pre><code>## # A tibble: 198 x 11
+##      pid first last  party state.x start.x    end.x      state.y district
+##    &lt;int&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;   &lt;date&gt;     &lt;date&gt;     &lt;chr&gt;   &lt;chr&gt;   
+##  1     8 Clin… Ande… Demo… NM      1949-01-03 1973-01-03 NM      AL      
+##  2    27 Frank Barr… Repu… WY      1953-01-03 1959-01-03 WY      AL      
+##  3    32 James Beall Repu… MD      1953-01-03 1965-01-03 MD      6       
+##  4    35 Geor… Bend… Repu… OH      1954-12-16 1957-01-03 OH      AL      
+##  5    67 Thom… Burch Demo… VA      1946-05-31 1946-11-05 VA      5       
+##  6    83 Frank Carl… Repu… KS      1950-11-29 1969-01-03 KS      6       
+##  7    86 Clif… Case  Repu… NJ      1955-01-05 1979-01-03 NJ      6       
+##  8    87 Fran… Case  Repu… SD      1951-01-03 1962-06-22 SD      2       
+##  9    90 Virg… Chap… Demo… KY      1949-01-03 1951-03-08 KY      6       
+## 10    98 Earle Clem… Demo… KY      1950-11-27 1957-01-03 KY      2       
+## # … with 188 more rows, and 2 more variables: start.y &lt;date&gt;, end.y &lt;date&gt;</code></pre>

@@ -1,0 +1,95 @@
+---
+title: "Missing Data"
+date: "2019-02-07"
+editor_options: 
+  chunk_output_type: console
+---
+
+# Missing Data
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(janitor)
+library(lubridate)
+library(socviz)
+library(naniar)
+library(visdat)
+
+```
+
+```{r organdata}
+organdata
+```
+
+```{r}
+vis_dat(organdata)
+```
+
+```{r}
+miss_var_summary(organdata)
+```
+
+```{r}
+miss_case_summary(organdata)
+```
+
+```{r}
+organdata %>%
+  select(consent_law, year, pubhealth, roads) %>%
+  group_by(consent_law) %>%
+  miss_var_summary()
+```
+
+
+```{r}
+vis_miss(organdata)
+```
+
+
+```{r}
+vis_miss(organdata, cluster = TRUE)
+```
+
+```{r}
+gg_miss_var(organdata)
+```
+
+```{r}
+gg_miss_upset(organdata)
+```
+
+
+```{r}
+ggplot(organdata, 
+       aes(x = donors, 
+           y = pubhealth)) + 
+  geom_miss_point()
+```
+
+
+```{r}
+vis_dat(organdata)
+
+ggplot(organdata, 
+       aes(x = pubhealth, 
+           y = donors)) + 
+  geom_miss_point()
+
+gg_miss_var(organdata)
+
+library(rpart)
+library(rpart.plot)
+
+organdata %>%
+  add_prop_miss() %>%
+  rpart(prop_miss_all ~ ., data = .) %>%
+  prp(type = 4, extra = 101, prefix = "Prop. Miss = ")
+
+
+gg_miss_upset(organdata)
+n_var_miss(organdata)
+gg_miss_upset(organdata, nintersects = NA)
+
+```

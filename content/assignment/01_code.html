@@ -1,0 +1,434 @@
+---
+title: "Sample Code: R"
+date: "2018-09-18"
+editor_options: 
+  chunk_output_type: console
+---
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    background-color: #ffffff;
+    color: #a0a0a0;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #a0a0a0;  padding-left: 4px; }
+div.sourceCode
+  { color: #1f1c1b; background-color: #ffffff; }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span. { color: #1f1c1b; } /* Normal */
+code span.al { color: #bf0303; background-color: #f7e6e6; font-weight: bold; } /* Alert */
+code span.an { color: #ca60ca; } /* Annotation */
+code span.at { color: #0057ae; } /* Attribute */
+code span.bn { color: #b08000; } /* BaseN */
+code span.bu { color: #644a9b; font-weight: bold; } /* BuiltIn */
+code span.cf { color: #1f1c1b; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #924c9d; } /* Char */
+code span.cn { color: #aa5500; } /* Constant */
+code span.co { color: #898887; } /* Comment */
+code span.cv { color: #0095ff; } /* CommentVar */
+code span.do { color: #607880; } /* Documentation */
+code span.dt { color: #0057ae; } /* DataType */
+code span.dv { color: #b08000; } /* DecVal */
+code span.er { color: #bf0303; text-decoration: underline; } /* Error */
+code span.ex { color: #0095ff; font-weight: bold; } /* Extension */
+code span.fl { color: #b08000; } /* Float */
+code span.fu { color: #644a9b; } /* Function */
+code span.im { color: #ff5500; } /* Import */
+code span.in { color: #b08000; } /* Information */
+code span.kw { color: #1f1c1b; font-weight: bold; } /* Keyword */
+code span.op { color: #1f1c1b; } /* Operator */
+code span.ot { color: #006e28; } /* Other */
+code span.pp { color: #006e28; } /* Preprocessor */
+code span.re { color: #0057ae; background-color: #e0e9f8; } /* RegionMarker */
+code span.sc { color: #3daee9; } /* SpecialChar */
+code span.ss { color: #ff5500; } /* SpecialString */
+code span.st { color: #bf0303; } /* String */
+code span.va { color: #0057ae; } /* Variable */
+code span.vs { color: #bf0303; } /* VerbatimString */
+code span.wa { color: #bf0303; } /* Warning */
+</style>
+
+
+<h2 id="elements-of-r">Elements of R</h2>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ✔ ggplot2 3.1.0           ✔ purrr   0.2.5      
+## ✔ tibble  2.0.99.9000     ✔ dplyr   0.8.0.9000 
+## ✔ tidyr   0.8.2           ✔ stringr 1.3.1      
+## ✔ readr   1.3.1           ✔ forcats 0.3.0</code></pre>
+<pre><code>## ── Conflicts ───────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter()  masks stats::filter()
+## ✖ purrr::is_null() masks testthat::is_null()
+## ✖ dplyr::lag()     masks stats::lag()
+## ✖ dplyr::matches() masks testthat::matches()</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(socviz)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;socviz&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:kjhutils&#39;:
+## 
+##     %nin%</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">25</span>)</code></pre>
+<pre><code>## [1]  1  2  3  1  3  5 25</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">my_numbers &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">25</span>)
+
+your_numbers &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">31</span>, <span class="dv">71</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">21</span>, <span class="dv">6</span>)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">my_numbers</code></pre>
+<pre><code>## [1]  1  2  3  1  3  5 25</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>()
+
+<span class="co"># Error in mean.default() : argument &quot;x&quot; is missing, with no default</span></code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(<span class="dt">x =</span> my_numbers)</code></pre>
+<pre><code>## [1] 5.714286</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(<span class="dt">x =</span> your_numbers)</code></pre>
+<pre><code>## [1] 19.71429</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">my_summary &lt;-<span class="st"> </span><span class="kw">summary</span>(my_numbers)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(my_numbers)</code></pre>
+<pre><code>## my_numbers
+##  1  2  3  5 25 
+##  2  1  2  1  1</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sd</span>(my_numbers)</code></pre>
+<pre><code>## [1] 8.616153</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">my_numbers <span class="op">*</span><span class="st"> </span><span class="dv">5</span></code></pre>
+<pre><code>## [1]   5  10  15   5  15  25 125</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">my_numbers <span class="op">+</span><span class="st"> </span><span class="dv">1</span></code></pre>
+<pre><code>## [1]  2  3  4  2  4  6 26</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">my_numbers <span class="op">+</span><span class="st"> </span>my_numbers</code></pre>
+<pre><code>## [1]  2  4  6  2  6 10 50</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(my_numbers)</code></pre>
+<pre><code>## [1] &quot;numeric&quot;</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(my_summary)</code></pre>
+<pre><code>## [1] &quot;summaryDefault&quot; &quot;table&quot;</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(summary)</code></pre>
+<pre><code>## [1] &quot;function&quot;</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">titanic</code></pre>
+<pre><code>##       fate    sex    n percent
+## 1 perished   male 1364    62.0
+## 2 perished female  126     5.7
+## 3 survived   male  367    16.7
+## 4 survived female  344    15.6</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">class</span>(titanic)</code></pre>
+<pre><code>## [1] &quot;data.frame&quot;</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">titanic_tb &lt;-<span class="st"> </span><span class="kw">as_tibble</span>(titanic)
+titanic_tb</code></pre>
+<pre><code>## # A tibble: 4 x 4
+##   fate     sex        n percent
+##   &lt;fct&gt;    &lt;fct&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+## 1 perished male    1364    62  
+## 2 perished female   126     5.7
+## 3 survived male     367    16.7
+## 4 survived female   344    15.6</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(my_numbers)</code></pre>
+<pre><code>##  num [1:7] 1 2 3 1 3 5 25</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(my_summary)</code></pre>
+<pre><code>##  &#39;summaryDefault&#39; Named num [1:6] 1 1.5 3 5.71 4 ...
+##  - attr(*, &quot;names&quot;)= chr [1:6] &quot;Min.&quot; &quot;1st Qu.&quot; &quot;Median&quot; &quot;Mean&quot; ...</code></pre>
+<h2 id="the-cq-data">The CQ data</h2>
+<pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span>opts_chunk<span class="op">$</span><span class="kw">set</span>(<span class="dt">echo =</span> <span class="ot">TRUE</span>)
+
+<span class="kw">library</span>(tidyverse)
+<span class="kw">library</span>(janitor)
+<span class="kw">library</span>(lubridate)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;lubridate&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:base&#39;:
+## 
+##     date</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(socviz)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co">## Calculate age in years, months, or days</span>
+calc_age &lt;-<span class="st"> </span><span class="cf">function</span>(birth_date, <span class="dt">ref_date =</span> <span class="kw">Sys.Date</span>(), <span class="dt">unit =</span> <span class="st">&quot;year&quot;</span>) {
+
+    <span class="kw">require</span>(lubridate)
+
+    period &lt;-<span class="st"> </span><span class="kw">as.period</span>(<span class="kw">interval</span>(birth_date, ref_date),
+                        <span class="dt">unit =</span> unit)
+
+    <span class="cf">switch</span>(unit,
+           <span class="dt">year =</span> <span class="kw">year</span>(period),
+           <span class="dt">month =</span> <span class="kw">month</span>(period),
+           <span class="dt">day =</span> <span class="kw">day</span>(period),
+           <span class="dt">stop =</span> <span class="st">&quot;Unknown time unit. Choose year, month, or day.&quot;</span>)
+
+}</code></pre>
+<h3 id="load-it">Load it</h3>
+<pre class="sourceCode r"><code class="sourceCode r">filenames &lt;-<span class="st"> </span><span class="kw">dir</span>(<span class="dt">path =</span> <span class="st">&quot;data/clean&quot;</span>,
+                 <span class="dt">pattern =</span> <span class="st">&quot;*.csv&quot;</span>,
+                 <span class="dt">full.names =</span> <span class="ot">TRUE</span>)
+
+filenames</code></pre>
+<pre><code>##  [1] &quot;data/clean/01_79_congress.csv&quot;  &quot;data/clean/02_80_congress.csv&quot; 
+##  [3] &quot;data/clean/03_81_congress.csv&quot;  &quot;data/clean/04_82_congress.csv&quot; 
+##  [5] &quot;data/clean/05_83_congress.csv&quot;  &quot;data/clean/06_84_congress.csv&quot; 
+##  [7] &quot;data/clean/07_85_congress.csv&quot;  &quot;data/clean/08_86_congress.csv&quot; 
+##  [9] &quot;data/clean/09_87_congress.csv&quot;  &quot;data/clean/10_88_congress.csv&quot; 
+## [11] &quot;data/clean/11_89_congress.csv&quot;  &quot;data/clean/12_90_congress.csv&quot; 
+## [13] &quot;data/clean/13_91_congress.csv&quot;  &quot;data/clean/14_92_congress.csv&quot; 
+## [15] &quot;data/clean/15_93_congress.csv&quot;  &quot;data/clean/16_94_congress.csv&quot; 
+## [17] &quot;data/clean/17_95_congress.csv&quot;  &quot;data/clean/18_96_congress.csv&quot; 
+## [19] &quot;data/clean/19_97_congress.csv&quot;  &quot;data/clean/20_98_congress.csv&quot; 
+## [21] &quot;data/clean/21_99_congress.csv&quot;  &quot;data/clean/22_100_congress.csv&quot;
+## [23] &quot;data/clean/23_101_congress.csv&quot; &quot;data/clean/24_102_congress.csv&quot;
+## [25] &quot;data/clean/25_103_congress.csv&quot; &quot;data/clean/26_104_congress.csv&quot;
+## [27] &quot;data/clean/27_105_congress.csv&quot; &quot;data/clean/28_106_congress.csv&quot;
+## [29] &quot;data/clean/29_107_congress.csv&quot; &quot;data/clean/30_108_congress.csv&quot;
+## [31] &quot;data/clean/31_109_congress.csv&quot; &quot;data/clean/32_110_congress.csv&quot;
+## [33] &quot;data/clean/33_111_congress.csv&quot; &quot;data/clean/34_112_congress.csv&quot;
+## [35] &quot;data/clean/35_113_congress.csv&quot; &quot;data/clean/36_114_congress.csv&quot;
+## [37] &quot;data/clean/37_115_congress.csv&quot; &quot;data/clean/38_116_congress.csv&quot;</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">data &lt;-<span class="st"> </span>filenames <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">map_dfr</span>(read_csv, <span class="dt">.id =</span> <span class="st">&quot;congress&quot;</span>)</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   JobType5 = col_logical()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   JobType5 = col_logical()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   JobType5 = col_logical()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   JobType5 = col_logical()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   JobType5 = col_logical()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   JobType5 = col_logical()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   JobType5 = col_logical()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   JobType5 = col_logical()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   JobType5 = col_logical()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   JobType5 = col_logical()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   JobType5 = col_logical()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   JobType5 = col_logical()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   JobType5 = col_logical()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   JobType4 = col_logical(),
+##   JobType5 = col_logical()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   JobType4 = col_logical(),
+##   JobType5 = col_logical()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   JobType4 = col_logical(),
+##   JobType5 = col_logical()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   .default = col_character(),
+##   Death = col_logical(),
+##   JobType4 = col_logical(),
+##   JobType5 = col_logical()
+## )</code></pre>
+<pre><code>## See spec(...) for full column specifications.</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">data &lt;-<span class="st"> </span><span class="kw">clean_names</span>(data)
+
+data</code></pre>
+<pre><code>## # A tibble: 20,580 x 26
+##    congress last  first middle suffix nickname born  death sex   position
+##    &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;   
+##  1 1        Aber… Thom… Gerst… &lt;NA&gt;   &lt;NA&gt;     05/1… 01/2… M     U.S. Re…
+##  2 1        Adams Sher… &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     01/0… 10/2… M     U.S. Re…
+##  3 1        Aiken Geor… David  &lt;NA&gt;   &lt;NA&gt;     08/2… 11/1… M     U.S. Se…
+##  4 1        Allen Asa   Leona… &lt;NA&gt;   &lt;NA&gt;     01/0… 01/0… M     U.S. Re…
+##  5 1        Allen Leo   Elwood &lt;NA&gt;   &lt;NA&gt;     10/0… 01/1… M     U.S. Re…
+##  6 1        Almo… J.    Linds… Jr.    &lt;NA&gt;     06/1… 04/1… M     U.S. Re…
+##  7 1        Ande… Herm… Carl   &lt;NA&gt;   &lt;NA&gt;     01/2… 07/2… M     U.S. Re…
+##  8 1        Ande… Clin… Presba &lt;NA&gt;   &lt;NA&gt;     10/2… 11/1… M     U.S. Re…
+##  9 1        Ande… John  Zuing… &lt;NA&gt;   &lt;NA&gt;     03/2… 02/0… M     U.S. Re…
+## 10 1        Andr… Augu… Herman &lt;NA&gt;   &lt;NA&gt;     10/1… 01/1… M     U.S. Re…
+## # … with 20,570 more rows, and 16 more variables: party &lt;chr&gt;,
+## #   state &lt;chr&gt;, district &lt;chr&gt;, start &lt;chr&gt;, end &lt;chr&gt;, religion &lt;chr&gt;,
+## #   race &lt;chr&gt;, educational_attainment &lt;chr&gt;, job_type1 &lt;chr&gt;,
+## #   job_type2 &lt;chr&gt;, job_type3 &lt;chr&gt;, job_type4 &lt;chr&gt;, job_type5 &lt;chr&gt;,
+## #   mil1 &lt;chr&gt;, mil2 &lt;chr&gt;, mil3 &lt;chr&gt;</code></pre>

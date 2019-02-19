@@ -1,0 +1,207 @@
+---
+title: "Missing Data"
+date: "2019-02-07"
+editor_options: 
+  chunk_output_type: console
+---
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    background-color: #ffffff;
+    color: #a0a0a0;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #a0a0a0;  padding-left: 4px; }
+div.sourceCode
+  { color: #1f1c1b; background-color: #ffffff; }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span. { color: #1f1c1b; } /* Normal */
+code span.al { color: #bf0303; background-color: #f7e6e6; font-weight: bold; } /* Alert */
+code span.an { color: #ca60ca; } /* Annotation */
+code span.at { color: #0057ae; } /* Attribute */
+code span.bn { color: #b08000; } /* BaseN */
+code span.bu { color: #644a9b; font-weight: bold; } /* BuiltIn */
+code span.cf { color: #1f1c1b; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #924c9d; } /* Char */
+code span.cn { color: #aa5500; } /* Constant */
+code span.co { color: #898887; } /* Comment */
+code span.cv { color: #0095ff; } /* CommentVar */
+code span.do { color: #607880; } /* Documentation */
+code span.dt { color: #0057ae; } /* DataType */
+code span.dv { color: #b08000; } /* DecVal */
+code span.er { color: #bf0303; text-decoration: underline; } /* Error */
+code span.ex { color: #0095ff; font-weight: bold; } /* Extension */
+code span.fl { color: #b08000; } /* Float */
+code span.fu { color: #644a9b; } /* Function */
+code span.im { color: #ff5500; } /* Import */
+code span.in { color: #b08000; } /* Information */
+code span.kw { color: #1f1c1b; font-weight: bold; } /* Keyword */
+code span.op { color: #1f1c1b; } /* Operator */
+code span.ot { color: #006e28; } /* Other */
+code span.pp { color: #006e28; } /* Preprocessor */
+code span.re { color: #0057ae; background-color: #e0e9f8; } /* RegionMarker */
+code span.sc { color: #3daee9; } /* SpecialChar */
+code span.ss { color: #ff5500; } /* SpecialString */
+code span.st { color: #bf0303; } /* String */
+code span.va { color: #0057ae; } /* Variable */
+code span.vs { color: #bf0303; } /* VerbatimString */
+code span.wa { color: #bf0303; } /* Warning */
+</style>
+
+
+<h2 id="missing-data">Missing Data</h2>
+<pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span>opts_chunk<span class="op">$</span><span class="kw">set</span>(<span class="dt">echo =</span> <span class="ot">TRUE</span>)
+
+<span class="kw">library</span>(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ✔ ggplot2 3.1.0           ✔ purrr   0.2.5      
+## ✔ tibble  2.0.99.9000     ✔ dplyr   0.8.0.9000 
+## ✔ tidyr   0.8.2           ✔ stringr 1.3.1      
+## ✔ readr   1.3.1           ✔ forcats 0.3.0</code></pre>
+<pre><code>## ── Conflicts ───────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter()  masks stats::filter()
+## ✖ purrr::is_null() masks testthat::is_null()
+## ✖ dplyr::lag()     masks stats::lag()
+## ✖ dplyr::matches() masks testthat::matches()</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(janitor)
+<span class="kw">library</span>(lubridate)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;lubridate&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:base&#39;:
+## 
+##     date</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(socviz)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;socviz&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:kjhutils&#39;:
+## 
+##     %nin%</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(naniar)
+<span class="kw">library</span>(visdat)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">organdata</code></pre>
+<pre><code>## # A tibble: 238 x 21
+##    country year       donors   pop pop_dens   gdp gdp_lag health health_lag
+##    &lt;chr&gt;   &lt;date&gt;      &lt;dbl&gt; &lt;int&gt;    &lt;dbl&gt; &lt;int&gt;   &lt;int&gt;  &lt;dbl&gt;      &lt;dbl&gt;
+##  1 Austra… NA          NA    17065    0.220 16774   16591   1300       1224
+##  2 Austra… 1991-01-01  12.1  17284    0.223 17171   16774   1379       1300
+##  3 Austra… 1992-01-01  12.4  17495    0.226 17914   17171   1455       1379
+##  4 Austra… 1993-01-01  12.5  17667    0.228 18883   17914   1540       1455
+##  5 Austra… 1994-01-01  10.2  17855    0.231 19849   18883   1626       1540
+##  6 Austra… 1995-01-01  10.2  18072    0.233 21079   19849   1737       1626
+##  7 Austra… 1996-01-01  10.6  18311    0.237 21923   21079   1846       1737
+##  8 Austra… 1997-01-01  10.3  18518    0.239 22961   21923   1948       1846
+##  9 Austra… 1998-01-01  10.5  18711    0.242 24148   22961   2077       1948
+## 10 Austra… 1999-01-01   8.67 18926    0.244 25445   24148   2231       2077
+## # … with 228 more rows, and 12 more variables: pubhealth &lt;dbl&gt;,
+## #   roads &lt;dbl&gt;, cerebvas &lt;int&gt;, assault &lt;int&gt;, external &lt;int&gt;,
+## #   txp_pop &lt;dbl&gt;, world &lt;chr&gt;, opt &lt;chr&gt;, consent_law &lt;chr&gt;,
+## #   consent_practice &lt;chr&gt;, consistent &lt;chr&gt;, ccode &lt;chr&gt;</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">vis_dat</span>(organdata)</code></pre>
+<p><img src="/assignment/05_missing_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">miss_var_summary</span>(organdata)</code></pre>
+<pre><code>## # A tibble: 21 x 3
+##    variable  n_miss pct_miss
+##    &lt;chr&gt;      &lt;int&gt;    &lt;dbl&gt;
+##  1 year          34    14.3 
+##  2 donors        34    14.3 
+##  3 opt           28    11.8 
+##  4 pubhealth     21     8.82
+##  5 pop           17     7.14
+##  6 pop_dens      17     7.14
+##  7 gdp           17     7.14
+##  8 roads         17     7.14
+##  9 cerebvas      17     7.14
+## 10 assault       17     7.14
+## # … with 11 more rows</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">miss_case_summary</span>(organdata)</code></pre>
+<pre><code>## # A tibble: 238 x 3
+##     case n_miss pct_miss
+##    &lt;int&gt;  &lt;int&gt;    &lt;dbl&gt;
+##  1    84     12     57.1
+##  2   182     12     57.1
+##  3   210     12     57.1
+##  4    14     11     52.4
+##  5    28     11     52.4
+##  6    42     11     52.4
+##  7    56     11     52.4
+##  8    70     11     52.4
+##  9    98     11     52.4
+## 10   112     11     52.4
+## # … with 228 more rows</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">organdata <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">select</span>(consent_law, year, pubhealth, roads) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(consent_law) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">miss_var_summary</span>()</code></pre>
+<pre><code>## # A tibble: 6 x 4
+##   consent_law variable  n_miss pct_miss
+##   &lt;chr&gt;       &lt;chr&gt;      &lt;int&gt;    &lt;dbl&gt;
+## 1 Informed    year          16    14.3 
+## 2 Informed    pubhealth      8     7.14
+## 3 Informed    roads          8     7.14
+## 4 Presumed    year          18    14.3 
+## 5 Presumed    pubhealth     13    10.3 
+## 6 Presumed    roads          9     7.14</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">vis_miss</span>(organdata)</code></pre>
+<p><img src="/assignment/05_missing_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">vis_miss</span>(organdata, <span class="dt">cluster =</span> <span class="ot">TRUE</span>)</code></pre>
+<p><img src="/assignment/05_missing_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">gg_miss_var</span>(organdata)</code></pre>
+<p><img src="/assignment/05_missing_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">gg_miss_upset</span>(organdata)</code></pre>
+<p><img src="/assignment/05_missing_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(organdata, 
+       <span class="kw">aes</span>(<span class="dt">x =</span> donors, 
+           <span class="dt">y =</span> pubhealth)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_miss_point</span>()</code></pre>
+<p><img src="/assignment/05_missing_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">vis_dat</span>(organdata)</code></pre>
+<p><img src="/assignment/05_missing_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(organdata, 
+       <span class="kw">aes</span>(<span class="dt">x =</span> pubhealth, 
+           <span class="dt">y =</span> donors)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_miss_point</span>()</code></pre>
+<p><img src="/assignment/05_missing_files/figure-html/unnamed-chunk-10-2.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">gg_miss_var</span>(organdata)</code></pre>
+<p><img src="/assignment/05_missing_files/figure-html/unnamed-chunk-10-3.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(rpart)
+<span class="kw">library</span>(rpart.plot)
+
+organdata <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">add_prop_miss</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">rpart</span>(prop_miss_all <span class="op">~</span><span class="st"> </span>., <span class="dt">data =</span> .) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">prp</span>(<span class="dt">type =</span> <span class="dv">4</span>, <span class="dt">extra =</span> <span class="dv">101</span>, <span class="dt">prefix =</span> <span class="st">&quot;Prop. Miss = &quot;</span>)</code></pre>
+<pre><code>## Warning: Cannot retrieve the data used to build the model (so cannot determine roundint and is.binary for the variables).
+## To silence this warning:
+##     Call prp with roundint=FALSE,
+##     or rebuild the rpart model with model=TRUE.</code></pre>
+<p><img src="/assignment/05_missing_files/figure-html/unnamed-chunk-10-4.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">gg_miss_upset</span>(organdata)</code></pre>
+<p><img src="/assignment/05_missing_files/figure-html/unnamed-chunk-10-5.png" width="672" /></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">n_var_miss</span>(organdata)</code></pre>
+<pre><code>## [1] 13</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">gg_miss_upset</span>(organdata, <span class="dt">nintersects =</span> <span class="ot">NA</span>)</code></pre>
+<p><img src="/assignment/05_missing_files/figure-html/unnamed-chunk-10-6.png" width="672" /></p>

@@ -4,7 +4,6 @@ lessons:
     date: "January 10th"
     class: "01-class"
 
-
   - title: "Models of work"
     date: "January 17th"
     class: "02-models"
@@ -12,6 +11,7 @@ lessons:
   - title: "Getting data in to R"
     date: "January 24th"
     class: "03-data-in"
+    assignment: "01_code"
 
   - title: "Coding and recoding"    
     date: "January 31st"
@@ -20,6 +20,7 @@ lessons:
   - title: "Missing data"
     date: "February 7th"
     class: "05-missing-data"
+    assignment: "05_missing"
 
   - title: ""    
     date: "February 14th"

@@ -1,0 +1,304 @@
+---
+title: "Working with the CQ Data"
+date: "2019-01-31"
+editor_options: 
+  chunk_output_type: console
+---
+
+# Working with the CQ Data
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(janitor)
+library(lubridate)
+library(socviz)
+
+```
+
+```{r local-functions}
+
+## Calculate age in years, months, or days
+calc_age <- function(birth_date, ref_date = Sys.Date(), unit = "year") {
+
+    require(lubridate)
+
+    period <- as.period(interval(birth_date, ref_date),
+                        unit = unit)
+
+    switch(unit,
+           year = year(period),
+           month = month(period),
+           day = day(period),
+           stop = "Unknown time unit. Choose year, month, or day.")
+
+}
+
+```
+
+## Load it
+
+```{r load}
+
+filenames <- dir(path = "data/clean",
+                 pattern = "*.csv",
+                 full.names = TRUE)
+
+filenames
+
+data <- filenames %>% map_dfr(read_csv, .id = "congress")
+
+data <- clean_names(data)
+
+```
+
+## Recodes
+
+```{r recoding-1}
+
+## The start and end and other date variables are CQ's and coded 01/03/1945 (i.e. m/d/y)
+## We use lubridate's mdy() to convert them to date objects.
+data <- data %>% 
+  mutate(start = mdy(start), 
+         end = mdy(end), 
+         born = mdy(born), 
+         death = mdy(death))
+
+sessions <- as_tibble(data.frame(congress = 79:116,
+                       start_year = seq(1945, 2019, by = 2),
+                       end_year = seq(1947, 2021, by = 2)))
+
+sessions <- sessions %>% 
+  mutate(start_year = int_to_year(start_year, "01", "03"),
+         end_year = int_to_year(end_year, "01", "03"))
+
+
+data <- data %>% 
+  mutate(congress = as.numeric(congress) + 78)
+
+data
+```
+
+
+```{r jwervin}
+
+data$born[data$last == "Ervin" & data$first == "Joseph"] <- ymd("1901-03-01")
+
+```
+
+Join sessions to main data.
+
+```{r sessions}
+data <- left_join(data, sessions)
+
+
+## Character Vector of all name-dob combinations 
+data <- data %>% 
+  mutate(name_dob = paste(last, middle, first, born, sep = "--"))
+
+## Uniques
+name_dob <- as.character(unique(data$name_dob))
+
+## create pid for unique name_dobs
+persons <- tibble(pid = 1:length(name_dob),
+                  name_dob = name_dob)
+
+data <- left_join(data, persons)
+
+data <- data %>% 
+  mutate(start_age = calc_age(born, start_year))
+
+data %>% 
+  select(start_age)
+
+```
+
+
+William Joseph Green Jr and William Joseph Green III are father
+and son; the latter succeeded to his father's seat. The raw data
+have a mistaken entry for the son in the 79th (1945) congress,
+giving his `start_age` as 6.
+
+```{r wjgreen}
+
+ind <- which(with(data, congress == 79 & ## 1945
+                        last == "Green" &
+                        middle == "Joseph" &
+                        first == "William" &
+                        suffix == "III")) ## but this is the son
+
+data <- data[-ind,]
+
+
+```
+
+## New Variables
+
+- `poc`: Person of color; binary
+- `days_old`: N days old
+- `months_old`: N months old
+- `full_name`: Full Name
+- `end_career`: Date of end career
+- `entry_age`:  Age when first entered congress
+- `yr_fac`: start_year as a factor rather than a date
+
+```{r newvariables}
+
+data <- data %>% 
+  mutate(poc = recode(race, "White" = "White", .default = "Non-White"),
+         days_old = calc_age(born, start_year, "day"),
+         months_old = calc_age(born, start_year, "month"),
+         full_name = paste(first, last, suffix),
+         full_name = stringr::str_remove(full_name, " NA$"),
+         entry_age = calc_age(born, start),
+         yr_fac = factor(year(start_year)))
+
+
+```
+
+```{r}
+
+mean_age <- data %>% filter(position == "U.S. Representative") %>%
+    group_by(congress, sex) %>%
+    summarize(N = n(), 
+              mean_age = mean(start_age, na.rm = TRUE), 
+              SD = sd(start_age),
+              lo = mean_age - SD, 
+              hi = mean_age + SD)
+
+data %>% filter(position == "U.S. Representative",
+                    party %in% c("Democrat", "Republican")) %>%
+    group_by(congress, sex, party) %>%
+    summarize(year = first(start_year), 
+              mean_age = mean(start_age, na.rm = TRUE)) %>%
+    filter(congress == 100)
+
+
+```
+
+```{r}
+
+mean_age <- data %>% filter(position == "U.S. Representative") %>%
+    group_by(congress) %>%
+    summarize(year = first(start_year), 
+              mean_age = mean(start_age, na.rm = TRUE))
+
+mean_age
+```
+
+
+```{r}
+
+data %>% filter(position == "U.S. Representative",
+                    party %in% c("Democrat", "Republican")) %>%
+    group_by(congress) %>%
+    summarize(year = first(start_year), 
+              mean_age = mean(start_age, na.rm = TRUE)) %>%
+    filter(congress == 116)
+
+```
+
+```{r}
+
+data %>% filter(position == "U.S. Representative",
+                    party %in% c("Democrat", "Republican")) %>%
+    group_by(congress, party) %>%
+    summarize(year = first(start_year), 
+              mean_age = mean(start_age, na.rm = TRUE)) %>%
+    filter(congress == 116)
+
+```
+
+```{r}
+
+median_age <- data %>% 
+  filter(position == "U.S. Representative") %>%
+  group_by(congress) %>%
+    summarize(year = first(start_year), 
+              median_age = median(start_age))
+
+median_age_party <- data %>% 
+  filter(position == "U.S. Representative") %>%
+  group_by(congress, party) %>%
+    summarize(year = first(start_year), 
+              median_age = median(start_age)) %>%
+    filter(party %in% c("Democrat", "Republican"))
+
+median_age_party
+
+```
+
+
+```{r}
+oldest_group_by_year <- data %>% 
+  filter(party %in% c("Democrat", "Republican"),
+         position == "U.S. Representative") %>%
+  group_by(congress, party) %>% 
+  filter(start_age > quantile(start_age, 0.99, na.rm = TRUE))
+
+youngest_group_by_year <- data %>% 
+  filter(party %in% c("Democrat", "Republican"),
+         position == "U.S. Representative") %>%
+  group_by(congress, party) %>%
+  filter(start_age < quantile(start_age, 0.01, na.rm = TRUE))
+
+```
+
+```{r}
+
+name_ranks <- data %>%
+    select(start_year, first, sex) %>%
+    filter(sex == "M", .preserve = FALSE) %>%
+    group_by(start_year, first) %>%
+    summarize(n = n()) %>%
+    mutate(pct = (n/sum(n))*100) %>%
+    group_by(start_year) %>%
+    top_n(3, wt = pct)
+
+name_ranks
+
+```
+
+
+```{r}
+job_ranks <- data %>%
+    select(start_year, job_type1) %>%
+    group_by(start_year, job_type1) %>%
+    summarize(n = n()) %>%
+    mutate(pct = (n/sum(n))*100) %>%
+    group_by(start_year) %>%
+    top_n(3, wt = pct) %>% 
+    arrange(desc(pct), .by_group = TRUE)  
+
+job_ranks
+
+```
+
+```{r}
+
+senate <- data %>% 
+  filter(position == "U.S. Senator") %>% 
+  group_by(pid) %>% 
+  summarize(first = first(first), 
+            last = first(last), 
+            party = first(party),
+            state = first(state), 
+            start = first(start), 
+            end = first(end))
+
+house <- data %>% 
+  filter(position == "U.S. Representative") %>% 
+  group_by(pid) %>% 
+  summarize(state = first(state),
+            district = first(district),
+            start = first(start), 
+            end = first(end))
+
+
+sen_and_house <- inner_join(senate, house, by = "pid")
+
+sen_and_house
+
+```
+

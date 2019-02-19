@@ -1,6 +1,6 @@
 ---
 title: "Missing Data"
-date: "2019-02-17"
+date: "2019-02-07"
 citeproc: false
 bibliography: ../../static/bib/references.bib
 csl: ../../static/bib/chicago-syllabus-no-bib.csl

@@ -77,4 +77,4 @@ To get git and GitHub up and running, consult Jenny Bryan et al's extremely usef
 
 # Notes and Queries
 
-If I use slides in class I'll post them for that week on the [schedule](schedule/) along with any code we make use of or other material we refer to.
+If I use slides in class I'll post them for that week on the [schedule](/schedule/) along with any code we make use of or other material we refer to.

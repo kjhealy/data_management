@@ -4,7 +4,7 @@ slug: schedule
 ---
 
 - <i class="fas fa-book-reader"></i> Readings 
-- <i class="fas fa-laptop-code"></i> Assignments
+- <i class="fas fa-laptop-code"></i> Code
 - <i class="fas fa-university"></i></a> Class materials
 
 ---
