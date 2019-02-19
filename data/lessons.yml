@@ -6,29 +6,23 @@ lessons:
 
 
   - title: "Models of work"
-    date: "January 15th/17th"
+    date: "January 17th"
     class: "02-models"
     
   - title: "Getting data in to R"
-    date: "January 22nd/24th"
+    date: "January 24th"
     class: "03-data-in"
 
   - title: "Coding and recoding"    
-    date: "January 29th/31st"
+    date: "January 31st"
     class: "04-recoding"
 
   - title: "Missing data"
-    date: "February 5th/7th"
+    date: "February 7th"
     class: "05-missing-data"
 
   - title: ""    
-    date: "February 12th/14th"
+    date: "February 14th"
 
   - title: ""    
-    date: "February 19th/21st"
-
-  - title: ""
-    date: "February 26th/28th"
-
-  - title: ""
-    date: "March 5th/7th"
+    date: "February 21st"
