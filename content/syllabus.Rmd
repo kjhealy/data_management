@@ -27,6 +27,31 @@ This introduction is opinionated but not dogmatic. I will emphasize a collection
 
 I'll be starting from the overview in [@healy18:_plain_person_guide_plain_text_social_scien]. However, I am not going to encourage you to learn Emacs. 
 
+# Topics
+
+Here's a (likely aspirational) list of topics we might cover, divided into two groups: stuff that happens outside of R (our main data analysis tool), and stuff that happens inside of R:
+
+## Outside of R
+
+- Why don’t I have secure, incremental, automatic, off-site backups?
+- How does my computer work, like, in general?
+- What is the shell? Why do I need it?
+- Why should I use plain-text tools?
+- What are some handy Unix-y things I can do, specficially?
+- How do I use Git and GitHub?
+- How do I organize paper- or chapter-sized projects?
+- What if my advisor wants to read papers in Microsoft Word?
+
+## Inside of R
+
+- How do I get my data into R?
+- What’s good name hygiene and code style?
+- How should I deal with factors and categorical variables and the like?
+- How do I clean data in R? What are some things to watch out for?
+- How do I manage missing data in R? 
+- How do I reshape data? 
+- How do I manipulate, summarize, and extend my data?
+
 # Software
 
 The main tools we will be working with are R, [R Studio](rstudio.com), [git](https://git-scm.com/), and [GitHub](https://git-scm.com/). There are other things, too, such as the shell (or console, or command line, or Terminal), some handy Unix utilities, text editors, and assorted miscellaneous applications. But to begin with, make sure you have R, R Studio, and git installed, along with access to GitHub.

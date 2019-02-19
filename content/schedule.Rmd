@@ -4,7 +4,6 @@ slug: schedule
 ---
 
 - <i class="fas fa-book-reader"></i> Readings 
-- <i class="fas fa-file-alt"></i> Memos
 - <i class="fas fa-laptop-code"></i> Assignments
 - <i class="fas fa-university"></i></a> Class materials
 
