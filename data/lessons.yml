@@ -25,5 +25,6 @@ lessons:
   - title: ""    
     date: "February 14th"
 
-  - title: ""    
+  - title: "More on dplyr"    
     date: "February 21st"
+    class: "06_more_dplyr"
