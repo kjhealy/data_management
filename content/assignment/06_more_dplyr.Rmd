@@ -1,0 +1,407 @@
+---
+title: "More on dplyr"
+date: "2019-02-07"
+editor_options: 
+  chunk_output_type: console
+---
+
+# More on dplyr
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(janitor)
+library(lubridate)
+library(socviz)
+library(gapminder)
+
+```
+
+## Scoping
+
+```{r scope1}
+
+organdata %>%
+  group_by(world) %>%
+  summarize_if(is.numeric, mean, na.rm = TRUE) %>%
+  select(world, donors, pubhealth, roads) %>%
+  select_all(tools::toTitleCase)
+
+```
+
+```{r scope2}
+
+organdata %>%
+  group_by(country) %>%
+  summarize_if(is.numeric, 
+               funs(avg = mean, sd = sd), 
+               na.rm = TRUE) %>%
+  select(country, donors_avg, 
+         donors_sd, roads_avg, roads_sd) %>%
+  arrange(desc(donors_avg))
+
+```
+
+```{r scope3}
+
+out <- lm(donors ~ pop + gdp + roads, data = organdata)
+
+summary(out)
+
+```
+
+```{r mapping}
+
+names(summary(out))
+
+```
+
+```{r mapping1}
+organdata %>%
+  split(.$world) %>%
+  map(~ lm(donors ~ pop + gdp + roads, data = .)) %>%
+  map(summary) %>%
+  map_dbl("r.squared")
+```
+
+## Zero Counts in Dplyr
+
+Grab the data remotely, to make this self-contained.
+
+```{r data}
+
+url <- "https://datamgmt.org/data/first_terms.csv"
+
+df <- read_csv(url)
+
+df
+
+```
+
+```{r }
+df %>%
+    group_by(start_year, party, sex) %>%
+    summarize(N = n()) %>%
+    mutate(freq = N / sum(N))
+```
+
+
+```{r }
+## Hex colors for sex
+sex_colors <- c("#E69F00", "#993300")
+
+## Hex color codes for Dem Blue and Rep Red
+party_colors <- c("#2E74C0", "#CB454A")
+
+## Group labels
+mf_labs <- tibble(M = "Men", F = "Women")
+
+theme_set(theme_minimal())
+```
+
+```{r }
+df %>%
+    group_by(start_year, party, sex) %>%
+    summarize(N = n()) %>%
+    mutate(freq = N / sum(N)) %>%
+    ggplot(aes(x = start_year,
+               y = freq,
+               fill = sex)) +
+    geom_col() +
+    scale_y_continuous(labels = scales::percent) +
+    scale_fill_manual(values = sex_colors, labels = c("Women", "Men")) +
+    labs(x = "Year", y = "Percent", fill = "Group") +
+    facet_wrap(~ party)
+
+```
+
+```{r }
+df %>%
+    group_by(start_year, party, sex) %>%
+    summarize(N = n()) %>%
+    mutate(freq = N / sum(N)) %>%
+    ggplot(aes(x = start_year,
+               y = freq,
+               color = sex)) +
+    geom_line(size = 1.1) +
+    scale_y_continuous(labels = scales::percent) +
+    scale_color_manual(values = sex_colors, labels = c("Women", "Men")) +
+    guides(color = guide_legend(reverse = TRUE)) +
+    labs(x = "Year", y = "Percent", color = "Group") +
+    facet_wrap(~ party)
+```
+
+### Option 1: recode to factors
+
+```{r }
+df_f <- df %>% modify_if(is.character, as.factor)
+
+df_f %>%
+    group_by(start_year, party, sex) %>%
+    tally()
+
+
+```
+
+## Option 2: `ungroup()` and `complete()`
+
+```{r }
+df %>%
+    group_by(start_year, party, sex) %>%
+    summarize(N = n()) %>%
+    mutate(freq = N / sum(N)) %>%
+    ungroup() %>%
+    complete(start_year, party, sex,
+             fill = list(N = 0, freq = 0))
+
+```
+
+```{r }
+df_f %>%
+    group_by(start_year, party, sex) %>%
+    summarize(N = n()) %>%
+    mutate(freq = N / sum(N)) %>%
+    ggplot(aes(x = start_year,
+               y = freq,
+               color = sex)) +
+    geom_line(size = 1.1) +
+    scale_y_continuous(labels = scales::percent) +
+    scale_color_manual(values = sex_colors, labels = c("Women", "Men")) +
+    guides(color = guide_legend(reverse = TRUE)) +
+    labs(x = "Year", y = "Percent", color = "Group") +
+    facet_wrap(~ party)
+```
+
+## Spreading multiple values
+
+```{r }
+edu
+```
+
+```{r }
+edu_t <- gather(data = edu,
+                key = school,
+                value = freq,
+                elem4:coll4)
+
+head(edu_t) 
+
+
+tail(edu_t)
+```
+
+### Generate some sample stratified data
+
+```{r }
+gen_cats <- function(x, N = 1000) {
+    sample(x, N, replace = TRUE)
+}
+
+set.seed(101)
+N <- 1000
+
+income <- rnorm(N, 100, 50)
+
+vars <- list(stratum = c(1:8),
+          sex = c("M", "F"),
+          race =  c("B", "W"),
+          educ = c("HS", "BA"))
+
+df <- as_tibble(map_dfc(vars, gen_cats))
+df <- add_column(df, income)
+
+df
+```
+
+### Basic grouped summary (no gathering)
+
+```{r }
+tv_wide1 <- df %>% group_by(sex, race, stratum, educ) %>%
+    summarize(mean_inc = mean(income), N = n())
+
+tv_wide1
+
+```
+
+### Gather mean income and N into a key-value pair
+
+```{r }
+tv_wide2 <- df %>% group_by(sex, race, stratum, educ) %>%
+    summarize(mean_inc = mean(income), N = n()) %>%
+    gather(variable, value, -(sex:educ))
+
+tv_wide2
+```
+
+### Unite the `variable` (key) column with the Education measure
+
+```{r }
+tv_wide2 <- df %>% group_by(sex, race, stratum, educ) %>%
+    summarize(mean_inc = mean(income), N = n()) %>%
+    gather(variable, value, -(sex:educ)) %>%
+    unite(temp, educ, variable)
+
+tv_wide2
+
+```
+
+### Finally, spread the resulting temporary column, to get the desired result
+
+```{r }
+tv_wide2 <- df %>% group_by(sex, race, stratum, educ) %>%
+    summarize(mean_inc = mean(income), N = n()) %>%
+    gather(variable, value, -(sex:educ)) %>%
+    unite(temp, educ, variable) %>%
+    spread(temp, value)
+
+tv_wide2
+
+```
+
+### A function to do this gather, spread, unite sequence
+
+```{r }
+multi_spread <- function(df, key, value) {
+    # quote key
+    keyq <- rlang::enquo(key)
+    # break value vector into quotes
+    valueq <- rlang::enquo(value)
+    s <- rlang::quos(!!valueq)
+    df %>% gather(variable, value, !!!s) %>%
+        unite(temp, !!keyq, variable) %>%
+        spread(temp, value)
+}
+
+```
+
+
+### Use the function directly
+
+```{r }
+## Final version
+tv_wide3 <- df %>% group_by(sex, race, stratum, educ) %>%
+    summarize(mean_inc = mean(income), N = n()) %>%
+    multi_spread(educ, c(mean_inc, N))
+
+tv_wide3
+
+```
+
+## Nesting
+
+```{r }
+out_le <- gapminder %>%
+    group_by(continent, year) %>%
+    nest()
+
+out_le
+
+```
+
+```{r }
+out_le %>% filter(continent == "Europe" & year == 1977) %>% 
+           unnest()
+
+```
+
+```{r }
+fit_ols <- function(df) {
+    lm(lifeExp ~ log(gdpPercap), data = df)
+}
+
+out_le <- gapminder %>%
+    group_by(continent, year) %>%
+    nest() %>% 
+    mutate(model = map(data, fit_ols)) 
+
+
+out_le
+```
+
+```{r }
+library(broom) ## more later
+
+fit_ols <- function(df) {
+    lm(lifeExp ~ log(gdpPercap), data = df)
+}
+
+out_tidy <- gapminder %>%
+    group_by(continent, year) %>%
+    nest() %>% 
+    mutate(model = map(data, fit_ols),
+           tidied = map(model, tidy)) %>%
+    unnest(tidied, .drop = TRUE)
+
+out_tidy
+```
+
+```{r }
+
+out_tidy <- gapminder %>%
+    group_by(continent, year) %>%
+    nest() %>% 
+    mutate(model = map(data, fit_ols),
+           tidied = map(model, tidy)) %>%
+    unnest(tidied, .drop = TRUE) %>% 
+    filter(term %nin% "(Intercept)")
+
+out_tidy
+           
+
+```
+
+
+## Misc dplyr
+
+### Selection
+
+```{r }
+
+
+organdata %>% 
+  select(matches("_lag"))
+
+```
+
+```{r }
+organdata %>% 
+  select(world, everything())
+```
+
+### Summaries
+
+```{r }
+organdata %>% 
+  summarize_all(funs(min, max), na.rm = TRUE)
+```
+
+```{r }
+organdata %>% 
+  summarize_if(is.numeric, funs(min, max), na.rm = TRUE)
+```
+
+
+```{r }
+organdata %>%
+  group_by(country) %>%
+  summarize_if(is.numeric, funs(min, max), na.rm = TRUE)
+```
+
+### Scoped filtering
+
+```{r }
+organdata %>% 
+  filter_all(any_vars(is.na(.)))
+```
+
+### Rowwise operations
+
+```{r }
+iris %>% 
+     select(contains("Length")) %>%
+     rowwise() %>%
+     mutate(avg_length = 
+              mean(c(Petal.Length, Sepal.Length)))
+
+```

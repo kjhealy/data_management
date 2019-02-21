@@ -27,4 +27,5 @@ lessons:
 
   - title: "More on dplyr"    
     date: "February 21st"
-    class: "06_more_dplyr"
+    class: "06-more-dplyr"
+    assignment: "06_more_dplyr"
