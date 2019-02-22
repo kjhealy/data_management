@@ -1,6 +1,5 @@
 ---
 title: "Sample Code: R"
-date: "2018-09-18"
 editor_options: 
   chunk_output_type: console
 ---
@@ -133,7 +132,12 @@ filenames <- dir(path = "data/clean",
 
 filenames
 
-data <- filenames %>% map_dfr(read_csv, .id = "congress")
+specs <- spec_csv(filenames[1])
+
+specs
+
+data <- filenames %>%
+    map_dfr(read_csv, .id = "congress", col_types = specs)
 
 data <- clean_names(data)
 
