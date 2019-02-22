@@ -5,8 +5,6 @@ editor_options:
   chunk_output_type: console
 ---
 
-# More on dplyr
-
 ```{r setup, include=TRUE}
 knitr::opts_chunk$set(echo = TRUE)
 
@@ -18,7 +16,7 @@ library(gapminder)
 
 ```
 
-## Scoping
+# Scoping
 
 ```{r scope1}
 
@@ -65,7 +63,7 @@ organdata %>%
   map_dbl("r.squared")
 ```
 
-## Zero Counts in Dplyr
+# Zero Counts in Dplyr
 
 Grab the data remotely, to make this self-contained.
 
@@ -132,7 +130,7 @@ df %>%
     facet_wrap(~ party)
 ```
 
-### Option 1: recode to factors
+## Option 1: recode to factors
 
 ```{r }
 df_f <- df %>% modify_if(is.character, as.factor)
@@ -173,7 +171,7 @@ df_f %>%
     facet_wrap(~ party)
 ```
 
-## Spreading multiple values
+# Spreading multiple values
 
 ```{r }
 edu
@@ -191,7 +189,7 @@ head(edu_t)
 tail(edu_t)
 ```
 
-### Generate some sample stratified data
+## Generate some sample stratified data
 
 ```{r }
 gen_cats <- function(x, N = 1000) {
@@ -214,7 +212,7 @@ df <- add_column(df, income)
 df
 ```
 
-### Basic grouped summary (no gathering)
+## Basic grouped summary (no gathering)
 
 ```{r }
 tv_wide1 <- df %>% group_by(sex, race, stratum, educ) %>%
@@ -224,7 +222,7 @@ tv_wide1
 
 ```
 
-### Gather mean income and N into a key-value pair
+## Gather mean income and N into a key-value pair
 
 ```{r }
 tv_wide2 <- df %>% group_by(sex, race, stratum, educ) %>%
@@ -234,7 +232,7 @@ tv_wide2 <- df %>% group_by(sex, race, stratum, educ) %>%
 tv_wide2
 ```
 
-### Unite the `variable` (key) column with the Education measure
+## Unite the `variable` (key) column with the Education measure
 
 ```{r }
 tv_wide2 <- df %>% group_by(sex, race, stratum, educ) %>%
@@ -246,7 +244,7 @@ tv_wide2
 
 ```
 
-### Finally, spread the resulting temporary column, to get the desired result
+## Finally, spread the resulting temporary column, to get the desired result
 
 ```{r }
 tv_wide2 <- df %>% group_by(sex, race, stratum, educ) %>%
@@ -276,7 +274,7 @@ multi_spread <- function(df, key, value) {
 ```
 
 
-### Use the function directly
+## Use the function directly
 
 ```{r }
 ## Final version
@@ -288,7 +286,7 @@ tv_wide3
 
 ```
 
-## Nesting
+# Nesting
 
 ```{r }
 out_le <- gapminder %>%
@@ -352,9 +350,9 @@ out_tidy
 ```
 
 
-## Misc dplyr
+# Misc dplyr
 
-### Selection
+## Selection
 
 ```{r }
 
@@ -369,7 +367,7 @@ organdata %>%
   select(world, everything())
 ```
 
-### Summaries
+## Summaries
 
 ```{r }
 organdata %>% 
@@ -388,14 +386,14 @@ organdata %>%
   summarize_if(is.numeric, funs(min, max), na.rm = TRUE)
 ```
 
-### Scoped filtering
+## Scoped filtering
 
 ```{r }
 organdata %>% 
   filter_all(any_vars(is.na(.)))
 ```
 
-### Rowwise operations
+## Rowwise operations
 
 ```{r }
 iris %>% 
