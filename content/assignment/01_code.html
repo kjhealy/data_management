@@ -1,6 +1,5 @@
 ---
 title: "Sample Code: R"
-date: "2018-09-18"
 editor_options: 
   chunk_output_type: console
 ---
@@ -198,220 +197,44 @@ filenames</code></pre>
 ## [33] &quot;data/clean/33_111_congress.csv&quot; &quot;data/clean/34_112_congress.csv&quot;
 ## [35] &quot;data/clean/35_113_congress.csv&quot; &quot;data/clean/36_114_congress.csv&quot;
 ## [37] &quot;data/clean/37_115_congress.csv&quot; &quot;data/clean/38_116_congress.csv&quot;</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r">data &lt;-<span class="st"> </span>filenames <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">map_dfr</span>(read_csv, <span class="dt">.id =</span> <span class="st">&quot;congress&quot;</span>)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">specs &lt;-<span class="st"> </span><span class="kw">spec_csv</span>(filenames[<span class="dv">1</span>])</code></pre>
 <pre><code>## Parsed with column specification:
 ## cols(
 ##   .default = col_character()
 ## )</code></pre>
 <pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character()
+<pre class="sourceCode r"><code class="sourceCode r">specs</code></pre>
+<pre><code>## cols(
+##   Last = col_character(),
+##   First = col_character(),
+##   Middle = col_character(),
+##   Suffix = col_character(),
+##   Nickname = col_character(),
+##   Born = col_character(),
+##   Death = col_character(),
+##   Sex = col_character(),
+##   Position = col_character(),
+##   Party = col_character(),
+##   State = col_character(),
+##   District = col_character(),
+##   Start = col_character(),
+##   End = col_character(),
+##   Religion = col_character(),
+##   Race = col_character(),
+##   `Educational Attainment` = col_character(),
+##   JobType1 = col_character(),
+##   JobType2 = col_character(),
+##   JobType3 = col_character(),
+##   JobType4 = col_character(),
+##   JobType5 = col_character(),
+##   Mil1 = col_character(),
+##   Mil2 = col_character(),
+##   Mil3 = col_character()
 ## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character(),
-##   JobType5 = col_logical()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character(),
-##   JobType5 = col_logical()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character(),
-##   JobType5 = col_logical()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character(),
-##   JobType5 = col_logical()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character(),
-##   JobType5 = col_logical()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character(),
-##   JobType5 = col_logical()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character(),
-##   JobType5 = col_logical()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character(),
-##   JobType5 = col_logical()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character(),
-##   JobType5 = col_logical()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character(),
-##   JobType5 = col_logical()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character(),
-##   JobType5 = col_logical()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character(),
-##   JobType5 = col_logical()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character(),
-##   JobType5 = col_logical()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character(),
-##   JobType4 = col_logical(),
-##   JobType5 = col_logical()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character(),
-##   JobType4 = col_logical(),
-##   JobType5 = col_logical()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character(),
-##   JobType4 = col_logical(),
-##   JobType5 = col_logical()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre><code>## Parsed with column specification:
-## cols(
-##   .default = col_character(),
-##   Death = col_logical(),
-##   JobType4 = col_logical(),
-##   JobType5 = col_logical()
-## )</code></pre>
-<pre><code>## See spec(...) for full column specifications.</code></pre>
-<pre class="sourceCode r"><code class="sourceCode r">data &lt;-<span class="st"> </span><span class="kw">clean_names</span>(data)
+<pre class="sourceCode r"><code class="sourceCode r">data &lt;-<span class="st"> </span>filenames <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">map_dfr</span>(read_csv, <span class="dt">.id =</span> <span class="st">&quot;congress&quot;</span>, <span class="dt">col_types =</span> specs)
+
+data &lt;-<span class="st"> </span><span class="kw">clean_names</span>(data)
 
 data</code></pre>
 <pre><code>## # A tibble: 20,580 x 26
